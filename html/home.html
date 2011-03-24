@@ -1,0 +1,41 @@
+<div id="canvas-container">
+	<style type="text/css">
+body {
+	height: 500px;
+	background: #ffffff;
+	background: -moz-linear-gradient(top, #aaeeee, #ffffff);
+	background: -webkit-gradient(linear, left top, left bottom, from(#aaeeee), to(#ffffff));
+	filter: progid:DXImageTransform.Microsoft.Gradient(
+                StartColorStr='#aaeeee', EndColorStr='#ffffff', GradientType=0);
+	background-repeat: no-repeat;
+}
+	</style>
+	<div id="canvas">
+		<h1>EAD Sandbox</h1>
+		<p>Welcome to the EAD Sandbox</p>
+		<form action="play" method="post" enctype="multipart/form-data" target="result">
+			<div id="leftcol">
+				<p><input type="file" name="eadfile"/></p>
+				<p><textarea name="eadxml">Copy and Paste EAD Here</textarea></p>
+			</div>
+			<div id="central">
+				<p><strong>XML</strong></p>
+				<p><input name="submit" type="submit" value="Show" title="Show the Raw XML"/></p>
+				<p><input name="submit" type="submit" value="Validate" title="Validate conformance to the DTD"/></p>
+				<p><strong>Crosswalks</strong></p>
+				<p><input name="submit" type="submit" value="to ISAD(G)" title="Crosswalk to ISAD(G)"/></p>
+			   	<p><input name="submit" type="submit" value="to DC" title="Crosswalk to Dublin-Core"/></p>
+			   	<p><input name="submit" type="submit" value="to MARC" title="Crosswalk to MARCXML"/></p>
+			   	<p><strong>Show all</strong></p>
+			   	<p><input name="submit" type="submit" value="People" title="Show People"/></p>
+			   	<p><input name="submit" type="submit" value="Places" title="Show Places"/></p>
+			   	<p><input name="submit" type="submit" value="Subjects" title="Show Subject"/></p>
+		   	</div>
+		   	<iframe id="result" name="result"></iframe>
+		</form>
+		<div style="clear:both">
+			<p><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">EAD Sandbox</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://github.com/bloomonkey/ead-sandbox" property="cc:attributionName" rel="cc:attributionURL">John Harrison, University of Liverpool</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License</a>.</p>
+		</div>		
+	</div>
+	
+</div>
