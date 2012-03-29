@@ -47,6 +47,13 @@ class EADSandboxWsgiApp(object):
                 xslt = etree.parse(fh)
             self.txrs[xslt_path] = txr = etree.XSLT(xslt)
         return txr(tree)
+    
+    def _html_listItems_from_xpath(self, ead, xpath):
+        # Return HTML list items from elements in ead that match XPath
+        matches = ead.xpath(xpath)
+        for xp in matches:
+            xml_str = etree.tostring(xp, method="text", encoding="utf-8")
+            yield '<li>{0}</li>'.format(xml_str.strip())
                 
     def __call__(self, environ, start_response):
         # Method to make instances of this class callable
@@ -81,8 +88,10 @@ class EADSandboxWsgiApp(object):
                 func = form.getfirst('submit').lower()
                 
                 if func == 'show':
-                    self.response_headers.append(('Content-Type', 'application/xml'))
-                    out.append(etree.tostring(ead))
+                    # Sacrifice potentially pretty XML display for browser compatibility
+                    self.response_headers.append(('Content-Type', 'text/plain; charset=UTF-8"'))
+                    xml_str = etree.tostring(ead, pretty_print=True, encoding='utf-8')
+                    out.append(xml_str)
                     
                 elif func == "validate":
                     out.extend(self._head())
@@ -106,29 +115,31 @@ class EADSandboxWsgiApp(object):
                 elif func == "to dc":
                     xslt_path = os.path.join('xml', 'ead2oai_dc.xsl')
                     result = self._apply_xslt(ead, xslt_path)
-                    self.response_headers.append(('Content-Type', 'application/xml'))
-                    out.append(etree.tostring(result))
+                    # Sacrifice potentially pretty XML display for browser compatibility
+                    self.response_headers.append(('Content-Type', 'text/plain; charset=UTF-8"'))
+                    out.append(etree.tostring(result, pretty_print=True, encoding='utf-8'))
                     
                 elif func == "to marc":
                     xslt_path = os.path.join('xml', 'ead2marcxml.xsl')
                     result = self._apply_xslt(ead, xslt_path)
-                    self.response_headers.append(('Content-Type', 'application/xml'))
-                    out.append(etree.tostring(result))
+                    # Sacrifice potentially pretty XML display for browser compatibility
+                    self.response_headers.append(('Content-Type', 'text/plain; charset=UTF-8"'))
+                    out.append(etree.tostring(result, pretty_print=True, encoding='utf-8'))
                     
                 elif func == 'xsl-fo':
                     xslt_path = os.path.join('xml', 'ead2fo.xsl')
                     result = self._apply_xslt(ead, xslt_path)
                     self.response_headers.append(('Content-Type', 'application/xml'))
-                    out.append(etree.tostring(result))
+                    out.append(etree.tostring(result, pretty_print=True, encoding='utf-8'))
                     
                 elif func == 'people':
                     out.extend(self._head())
                     out.extend(['<h2>{0}</h2>'.format(func.title()),
                                 '<ul>'
                                 ])
-                    xps = ead.xpath('//persname') + ead.xpath('//famname')
-                    out.extend(['<li>{0}</li>'.format(etree.tostring(xp, method="text", encoding="utf-8").strip()) for xp in xps])
-                    out.extend(['</ul>'])
+                    out.extend(self._html_listItems_from_xpath(ead, '//persname'))
+                    out.extend(self._html_listItems_from_xpath(ead, '//famname'))
+                    out.append('</ul>')
                     out.extend(self._tail())
                     
                 elif func == 'places':
@@ -136,9 +147,8 @@ class EADSandboxWsgiApp(object):
                     out.extend(['<h2>{0}</h2>'.format(func.title()),
                                 '<ul>'
                                 ])
-                    xps = ead.xpath('//geogname')
-                    out.extend(['<li>{0}</li>'.format(etree.tostring(xp, method="text", encoding="utf-8").strip()) for xp in xps])
-                    out.extend(['</ul>'])
+                    out.extend(self._html_listItems_from_xpath(ead, '//geogname'))
+                    out.append('</ul>')
                     out.extend(self._tail())
                     
                 elif func == 'subjects':
@@ -146,10 +156,10 @@ class EADSandboxWsgiApp(object):
                     out.extend(['<h2>{0}</h2>'.format(func.title()),
                                 '<ul>'
                                 ])
-                    xps = ead.xpath('//subject')
-                    out.extend(['<li>{0}</li>'.format(etree.tostring(xp, method="text", encoding="utf-8").strip()) for xp in xps])
-                    out.extend(['</ul>'])
-                 
+                    out.extend(self._html_listItems_from_xpath(ead, '//subject'))
+                    out.append('</ul>')
+                    out.extend(self._tail())
+                    
         else:
             self.response_headers.append(('Content-Type', 'text/plain'))
             out = ["Unsupported Operation"]
