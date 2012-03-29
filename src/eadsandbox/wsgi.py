@@ -21,21 +21,25 @@ class EADSandboxWsgiApp(object):
         self.txrs = {}
         
     def _fetch_ead(self, form):
+        # Fetch EAD XML from the submitted form
         xml = form['eadfile'].value
         if not xml:
             xml = form.getfirst('eadxml')
         return xml
     
     def _head(self):
+        # Return HTML Head
         self.response_headers.append(('Content-Type', 'text/html'))
         with open(os.path.join('html', 'head.tmpl'), 'r') as fh:
             return fh.readlines()
         
     def _tail(self):
+        # Return HTML Tail
         with open(os.path.join('html', 'tail.tmpl'), 'r') as fh:
             return fh.readlines()
         
     def _apply_xslt(self, tree, xslt_path):
+        # Apply XSLT from xslt_path to tree and return result as an lxml tree
         try:
             txr = self.txrs[xslt_path]
         except KeyError:
@@ -45,18 +49,20 @@ class EADSandboxWsgiApp(object):
         return txr(tree)
                 
     def __call__(self, environ, start_response):
+        # Method to make instances of this class callable
         self.environ = environ
         path = environ.get('PATH_INFO', '').strip('/')
         self.response_headers = []
         out = []
         if not len(path):
-            # return homepage
+            # Return homepage
             out.extend(self._head())
             with open(os.path.join('html', 'home.html'), 'r') as fh:
                 out.extend(fh.readlines())
             out.extend(self._tail())
             
         elif path.startswith('css/'):
+            # Return static CSS
             self.response_headers.append(('Content-Type', 'text/css'))
             with open(os.path.join(*path.split('/')), 'r') as fh:
                 out.extend(fh.readlines())
