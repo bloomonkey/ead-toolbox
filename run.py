@@ -1,5 +1,6 @@
 
 import sys
+import webbrowser
 sys.path.insert(1, 'src')
 
 from eadsandbox.wsgi import EADSandboxWsgiApp
@@ -20,6 +21,14 @@ if __name__ == "__main__":
     except IndexError, ValueError:
         port = 8008
     httpd = make_server(host, port, application)
-    print """You will be able to access the application at:
-http://{0}:{1}""".format(host, port)
+    url = "http://{0}:{1}".format(host, port)
+    webbrowser.open(url)
+    print """\
+Hopefully a new browser window/tab should have opened displaying the
+application.
+
+If not, you should be able to access the application at:
+"""
+    print url
     httpd.serve_forever()
+
