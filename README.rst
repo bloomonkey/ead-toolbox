@@ -1,8 +1,10 @@
-
 EAD Sandbox
 ===========
 
-11th January 2013 (2013-01-11)
+28th January 2013 (2013-01-28)
+
+DEPRECATED: The EAD Sandbox has now been subsumed by the `EAD Toolbox`_
+
 
 Contents
 --------
@@ -105,4 +107,4 @@ California, 94105, USA.
 .. _WSGI: http://wsgi.org
 .. _`Encoded Archival Description`: http://www.loc.gov/ead/
 .. _`University of Liverpool`: http://www.liv.ac.uk
-
+.. _`EAD Toolbox`: http://github.com/bloomonkey/ead-toolbox
