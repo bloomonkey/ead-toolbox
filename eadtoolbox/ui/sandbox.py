@@ -1,9 +1,8 @@
 
 import sys
 import webbrowser
-sys.path.insert(1, 'src')
 
-from eadsandbox.wsgi import EADSandboxWsgiApp
+from eadtoolbox.sandbox import EADSandboxWsgiApp
 application = EADSandboxWsgiApp()
 
 if __name__ == "__main__":
@@ -31,4 +30,3 @@ If not, you should be able to access the application at:
 """
     print url
     httpd.serve_forever()
-
