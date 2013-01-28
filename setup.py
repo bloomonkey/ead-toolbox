@@ -45,6 +45,11 @@ setup(
     requires=['lxml(>=2.1)'],
     install_requires=_install_requires,
     setup_requires=['setuptools-git'],
+    entry_points={
+        'console_scripts': [
+            "ead-sandbox = eadtoolbox.ui.sandbox:start_sandbox"
+        ]
+    },
     license="BSD",
     classifiers=[
         "Intended Audience :: Developers",
