@@ -5,12 +5,12 @@ Created on Nov 4, 2010
 """
 
 import cgi
-import os
 try:
     from cStringIO import StringIO
 except ImportError:
     from StringIO import StringIO
 
+from pkg_resources import resource_string
 from lxml import etree
 
 class EADSandboxWsgiApp(object):
@@ -30,13 +30,11 @@ class EADSandboxWsgiApp(object):
     def _head(self):
         # Return HTML Head
         self.response_headers.append(('Content-Type', 'text/html'))
-        with open(os.path.join('html', 'head.tmpl'), 'r') as fh:
-            return fh.readlines()
+        return [resource_string('eadtoolbox', 'data/html/head.tmpl')]
         
     def _tail(self):
         # Return HTML Tail
-        with open(os.path.join('html', 'tail.tmpl'), 'r') as fh:
-            return fh.readlines()
+        return [resource_string('eadtoolbox', 'data/html/tail.tmpl')]
         
     def _apply_xslt(self, tree, xslt_path):
         # Apply XSLT from xslt_path to tree and return result as an lxml tree
@@ -64,15 +62,13 @@ class EADSandboxWsgiApp(object):
         if not len(path):
             # Return homepage
             out.extend(self._head())
-            with open(os.path.join('html', 'home.html'), 'r') as fh:
-                out.extend(fh.readlines())
+            out.append(resource_string('eadtoolbox', 'data/html/home.html'))
             out.extend(self._tail())
             
         elif path.startswith('css/'):
             # Return static CSS
             self.response_headers.append(('Content-Type', 'text/css'))
-            with open(os.path.join(*path.split('/')), 'r') as fh:
-                out.extend(fh.readlines())
+            out.append(resource_string('eadtoolbox', 'data/{0}'.format(path)))
                 
         elif path == "play":
             form = cgi.FieldStorage(fp=environ['wsgi.input'], 
