@@ -1,7 +1,10 @@
-"""
-Created on Nov 4, 2010
+"""EAD Sandbox WSGI Application.
 
-@author: John Harrison <johnpaulharrison@gmail.com>
+The EAD Sandbox provides a Python WSGI compliant web application for playing
+around with Encoded Archival Description (EAD) XML documents.
+
+Current capabilities include validation to the DTD, cross-walk to other
+metadata schemas, and extraction and display of subject and named entities.
 """
 
 import cgi
@@ -12,6 +15,9 @@ except ImportError:
 
 from pkg_resources import resource_string
 from lxml import etree
+
+from eadtoolbox.validate import EAD2002DTDValidator
+
 
 class EADSandboxWsgiApp(object):
     """EAD Sandbox WSGI Application."""
@@ -77,7 +83,7 @@ class EADSandboxWsgiApp(object):
             try:
                 ead = etree.fromstring(xml)
             except etree.XMLSyntaxError:
-                # make use of browser default XML errors
+                # Make use of browser default XML errors
                 self.response_headers.append(('Content-Type', 'application/xml'))
                 out.append(xml)
             else:
@@ -91,13 +97,13 @@ class EADSandboxWsgiApp(object):
                     
                 elif func == "validate":
                     out.extend(self._head())
-                    with open(os.path.join('xml', 'ead.dtd'), 'r') as fh:
-                        dtd = etree.DTD(fh)
-                    if dtd.validate(ead):
+                    validator = EAD2002DTDValidator()
+                    
+                    if validator.validate(ead):
                         out.append('<h2>Validation Passed!</h2>')
                     else:
                         out.append('<h2>Validation Failed!</h2>')
-                        out.extend(['<p>{0}</p>'.format(e) for e in dtd.error_log.filter_from_errors()])
+                        out.extend(['<p>{0}</p>'.format(e) for e in validator.errors])
                     out.extend(self._tail())
                     
                 elif func == "to isad(g)":
