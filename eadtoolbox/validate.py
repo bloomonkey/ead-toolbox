@@ -15,7 +15,7 @@ class EADValidator(object):
 
 
 class EAD2002DTDValidator(EADValidator):
-    "Validator to validate using the EAD 2002 DTD."
+    "Validation according to the EAD 2002 DTD."
     
     def __init__(self):
         with resource_stream('eadtoolbox', 'data/xml/ead.dtd') as fh:
