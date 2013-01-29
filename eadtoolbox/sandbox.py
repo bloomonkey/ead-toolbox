@@ -13,10 +13,11 @@ try:
 except ImportError:
     from StringIO import StringIO
 
-from pkg_resources import resource_string
+from pkg_resources import resource_stream, resource_string
 from lxml import etree
 
 from eadtoolbox.validate import EAD2002DTDValidator
+from eadtoolbox.transform import XsltEadTransformer
 
 
 class EADSandboxWsgiApp(object):
@@ -45,12 +46,12 @@ class EADSandboxWsgiApp(object):
     def _apply_xslt(self, tree, xslt_path):
         # Apply XSLT from xslt_path to tree and return result as an lxml tree
         try:
-            txr = self.txrs[xslt_path]
+            transformer = self.txrs[xslt_path]
         except KeyError:
-            with open(xslt_path, 'r') as fh:
-                xslt = etree.parse(fh)
-            self.txrs[xslt_path] = txr = etree.XSLT(xslt)
-        return txr(tree)
+            fh = resource_stream('eadtoolbox', 'data/xml/{0}'.format(xslt_path))
+            self.txrs[xslt_path] = transformer = XsltEadTransformer(fh)
+            
+        return transformer.transform(tree)
     
     def _html_listItems_from_xpath(self, ead, xpath):
         # Return HTML list items from elements in ead that match XPath
@@ -109,30 +110,31 @@ class EADSandboxWsgiApp(object):
                 elif func == "to isad(g)":
                     out.extend(self._head())
                     out.append('<h2>ISAD(G)</h2>')
-                    xslt_path = os.path.join('xml', 'ead2isadg.xsl')
+                    xslt_path = 'ead2isadg.xsl'
                     result = self._apply_xslt(ead, xslt_path)
-                    out.append(etree.tostring(result))
+                    out.append(etree.tostring(result, encoding='utf-8'))
                     out.extend(self._tail())
                     
                 elif func == "to dc":
-                    xslt_path = os.path.join('xml', 'ead2oai_dc.xsl')
+                    xslt_path = 'ead2oai_dc.xsl'
                     result = self._apply_xslt(ead, xslt_path)
                     # Sacrifice potentially pretty XML display for browser compatibility
-                    self.response_headers.append(('Content-Type', 'text/plain; charset=UTF-8"'))
-                    out.append(etree.tostring(result, pretty_print=True, encoding='utf-8'))
-                    
+                    self.response_headers.append(('Content-Type',
+                                                  'text/plain; charset=UTF-8"'))
+                    out.append(etree.tostring(result,
+                                              pretty_print=True,
+                                              encoding='utf-8')
+                    )
                 elif func == "to marc":
-                    xslt_path = os.path.join('xml', 'ead2marcxml.xsl')
+                    xslt_path = 'ead2marcxml.xsl'
                     result = self._apply_xslt(ead, xslt_path)
                     # Sacrifice potentially pretty XML display for browser compatibility
-                    self.response_headers.append(('Content-Type', 'text/plain; charset=UTF-8"'))
-                    out.append(etree.tostring(result, pretty_print=True, encoding='utf-8'))
-                    
-                elif func == 'xsl-fo':
-                    xslt_path = os.path.join('xml', 'ead2fo.xsl')
-                    result = self._apply_xslt(ead, xslt_path)
-                    self.response_headers.append(('Content-Type', 'application/xml'))
-                    out.append(etree.tostring(result, pretty_print=True, encoding='utf-8'))
+                    self.response_headers.append(('Content-Type',
+                                                  'text/plain; charset=UTF-8"'))
+                    out.append(etree.tostring(result,
+                                              pretty_print=True,
+                                              encoding='utf-8')
+                    )
                     
                 elif func == 'people':
                     out.extend(self._head())
