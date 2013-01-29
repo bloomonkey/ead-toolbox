@@ -31,7 +31,7 @@ argparser.add_argument('-p', '--port', type=int,
 
 
 def start_sandbox(argv=None):
-    global argparser, session, server
+    global argparser
     if argv is None:
         args = argparser.parse_args()
     else:
