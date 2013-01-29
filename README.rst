@@ -6,13 +6,13 @@ EAD Toolbox
 Contents
 --------
 
- - `Description`_
- - `Author(s)`_
- - `Latest Version`_
- - `Requirements / Dependencies`_
- - `Documentation`_
- - `Bugs, Feature requests etc.`_
- - `Copyright & Licensing`_
+- `Description`_
+- `Author(s)`_
+- `Latest Version`_
+- `Requirements / Dependencies`_
+- `Documentation`_
+- `Bugs, Feature requests etc.`_
+- `Copyright & Licensing`_
                                    
 
 Description
