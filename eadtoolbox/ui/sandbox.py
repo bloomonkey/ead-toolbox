@@ -28,6 +28,14 @@ argparser.add_argument('-p', '--port', type=int,
                   action='store', dest='port',
                   default=8008, metavar='PORT',
                   help="number of port to listen on. default: 8008")
+argparser.add_argument('--no-browser',
+                       action='store_false', dest='browser',
+                       default=True,
+                       help=("don't open a browser window/tab containing the "
+                             "app. useful if you want to deploy the app for "
+                             "other users"
+                             )
+                       )
 
 
 def start_sandbox(argv=None):
@@ -39,13 +47,14 @@ def start_sandbox(argv=None):
     
     httpd = make_server(args.hostname, args.port, application)
     url = "http://{0}:{1}".format(args.hostname, args.port)
-    webbrowser.open(url)
-    print """\
-Hopefully a new browser window/tab should have opened displaying the
-application.
-
-If not, you should be able to access the application at:
-"""
+    if args.browser:
+        webbrowser.open(url)
+        print ("Hopefully a new browser window/tab should have opened "
+               "displaying the application.")
+        print "If not, you should be able to access the application at:"
+    else:
+        print "You should be able to access the application at:"
+        
     print url
     return httpd.serve_forever()
 
