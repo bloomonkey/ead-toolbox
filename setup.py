@@ -42,7 +42,7 @@ setup(
     include_package_data=True,
     package_data={_name: ['data/css/*.css', 'data/html/*.*', 'data/xml/*.*']},
     exclude_package_data={'': ['README.*', '.gitignore']},
-    requires=['lxml(>=2.1)'],
+    requires=['lxml(>=2.1)', 'wsgiref'],
     install_requires=_install_requires,
     setup_requires=['setuptools-git'],
     entry_points={
@@ -51,6 +51,7 @@ setup(
             "ead-validate = eadtoolbox.validate:validate"
         ]
     },
+    url='http://github.com/bloomonkey/ead-toolbox',
     license="BSD",
     classifiers=[
         "Intended Audience :: Developers",
