@@ -47,8 +47,8 @@ setup(
     setup_requires=['setuptools-git'],
     entry_points={
         'console_scripts': [
-            "ead-sandbox = eadtoolbox.ui.sandbox:start_sandbox",
-            "ead-validate = eadtoolbox.ui.validate:validate"
+            "ead-sandbox = eadtoolbox.sandbox:start",
+            "ead-validate = eadtoolbox.validate:validate"
         ]
     },
     license="BSD",

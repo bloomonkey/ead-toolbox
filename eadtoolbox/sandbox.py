@@ -8,13 +8,19 @@ metadata schemas, and extraction and display of subject and named entities.
 """
 
 import cgi
+import socket
+import sys
+import webbrowser
 try:
     from cStringIO import StringIO
 except ImportError:
     from StringIO import StringIO
 
-from pkg_resources import resource_stream, resource_string
 from lxml import etree
+from pkg_resources import resource_stream, resource_string
+from argparse import ArgumentParser
+from wsgiref.simple_server import make_server
+
 
 from eadtoolbox.validate import EAD2002DTDValidator
 from eadtoolbox.transform import XsltEadTransformer
@@ -170,4 +176,58 @@ class EADSandboxWsgiApp(object):
         self.response_headers.append(('Content-Length', str(sum([len(d) for d in out]))))
         start_response("200 OK", self.response_headers)
         return out
+
+
+def start(argv=None):
+    global argparser, application
+    if argv is None:
+        args = argparser.parse_args()
+    else:
+        args = argparser.parse_args(argv)
+    
+    httpd = make_server(args.hostname, args.port, application)
+    url = "http://{0}:{1}".format(args.hostname, args.port)
+    if args.browser:
+        webbrowser.open(url)
+        print ("Hopefully a new browser window/tab should have opened "
+               "displaying the application.")
+        print "If not, you should be able to access the application at:"
+    else:
+        print "You should be able to access the application at:"
         
+    print url
+    return httpd.serve_forever()
+
+
+# Create an instance of the application
+application = EADSandboxWsgiApp()
+
+# Set up argument parser
+argparser = ArgumentParser(description=__doc__.splitlines()[0])
+# Find default hostname
+try:
+    hostname = socket.gethostname()
+except:
+    hostname = 'localhost'
+
+argparser.add_argument('--hostname', type=str,
+                       action='store', dest='hostname',
+                       default=hostname, metavar='HOSTNAME',
+                       help=("name of host to listen on. default derived by "
+                             "inspection of local system"))
+argparser.add_argument('-p', '--port', type=int,
+                       action='store', dest='port',
+                       default=8008, metavar='PORT',
+                       help="number of port to listen on. default: 8008")
+argparser.add_argument('--no-browser',
+                       action='store_false', dest='browser',
+                       default=True,
+                       help=("don't open a browser window/tab containing the "
+                             "app. useful if you want to deploy the app for "
+                             "other users"
+                             )
+                       )
+
+
+if __name__ == "__main__":
+    sys.exit(start())
