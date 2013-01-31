@@ -16,13 +16,8 @@ _author = 'John Harrison'
 _author_email = 'john.harrison@liv.ac.uk'
 
 # Find longer description from README
-try:
-    with open('README.rst', 'r') as fh:
-        raw = fh.read()
-        _long_description = raw.split('Description\n-----------\n\n', 1)[1]
-        _long_description = _long_description.split('\n\n\n', 1)[0]
-except IOError:
-    _long_description = __doc__
+with open('README.rst', 'r') as fh:
+    _long_description = fh.read()
 
 # Requirements
 with open('requirements.txt', 'r') as fh:
