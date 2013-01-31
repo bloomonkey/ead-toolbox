@@ -41,7 +41,7 @@ class EAD2002DTDValidator(EADValidator):
     
 
 def validate(argv=None):
-    global argparser, session, server
+    global argparser
     if argv is None:
         args = argparser.parse_args()
     else:
