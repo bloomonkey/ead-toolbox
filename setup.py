@@ -3,10 +3,15 @@
 
 from __future__ import with_statement
 
+import sys
+
 # Import Distribute / Setuptools
 import distribute_setup
 distribute_setup.use_setuptools()
 from setuptools import setup, find_packages
+
+# Check Python version
+py_version = getattr(sys, 'version_info', (0, 0, 0))
 
 # Basic information
 _name = "eadtoolbox"
@@ -23,7 +28,11 @@ with open('README.rst', 'r') as fh:
 with open('requirements.txt', 'r') as fh:
     _install_requires = fh.readlines()
 
+if py_version < (2, 7):
+    _install_requires.append('argparse')
 
+
+# Setup
 setup(
     name=_name,
     version=_version,
