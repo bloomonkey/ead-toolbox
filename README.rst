@@ -53,7 +53,13 @@ http://github.com/bloomonkey/ead-toolbox
 Documentation
 -------------
 
-At this time all documentation that exists can be found in this README file!
+All executable commands are self documenting, i.e. you can get help on how to
+use them with the ``-h`` or ``--help`` option. e.g. ::
+
+ead-validate --help
+
+At this time the only additional documentation that exists can be found in this
+README file!
 
 
 Requirements / Dependencies
