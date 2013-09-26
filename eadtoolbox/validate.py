@@ -46,6 +46,11 @@ def validate(argv=None):
         args = argparser.parse_args()
     else:
         args = argparser.parse_args(argv)
+
+    xml_error_count = 0
+    dtd_error_count = 0
+    dtd_error_file_count = 0
+
     for filepath in args.file:
         # Check for well-formedness by attempting to parse the file
         try:
@@ -55,7 +60,10 @@ def validate(argv=None):
                 except etree.XMLSyntaxError as e:
                     logging.error("Not well-formed XML: %s",
                                   e)
-                    return 1
+                    # Increment XML error count
+                    xml_error_count += 1
+                    # Skip to next file
+                    continue
         except IOError as e:
             # Log non existent file
             logging.error("%s: %s", str(e.args[1]), filepath)
@@ -68,8 +76,7 @@ def validate(argv=None):
         
         if args.xsd:
             # TODO: add validation using the XSD schema
-            msg = ("Validation to XSD Schema is not yet available; "
-                   "coming soon...")
+            msg = ("Validation to XSD Schema is not yet available")
             logging.error(msg)
             raise NotImplementedError(msg)
         elif args.dtd:
@@ -80,8 +87,22 @@ def validate(argv=None):
                          validator.__class__.__doc__)
         else:
             logging.error('\n'.join([str(e) for e in validator.errors]))
-            return 2
-    return 0
+            # Increment DTD error count
+            dtd_error_count += len(validator.errors)
+            dtd_error_file_count += 1
+            # Skip to next file
+            continue
+    # Print a summary of any errors
+    if xml_error_count:
+        logging.info("XML errors = {0}".format(xml_error_count))
+    if dtd_error_count:
+        logging.info("Files with EAD DTD errors = {0}"
+                     "".format(dtd_error_file_count)
+                     )
+        logging.info("Total EAD DTD errors = {0}"
+                      "".format(dtd_error_count)
+                      )
+    return xml_error_count + dtd_error_file_count
 
 
 # Configure logger

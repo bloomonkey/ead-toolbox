@@ -1,7 +1,7 @@
 EAD Toolbox
 ===========
 
-31th January 2013 (2013-01-31)
+26th September 2013 (2013-09-26)
 
 Contents
 --------
@@ -45,9 +45,11 @@ John Harrison <john.harrison@liv.ac.uk> at the `University of Liverpool`_
 Latest Version
 --------------
 
-This is the first release of the software. There are no discrete version 
-numbers as yet. Source code is under version control and available from:
-http://github.com/bloomonkey/ead-toolbox
+Latest version is available from PyPI:
+https://pypi.python.org/pypi/eadtoolbox
+
+Source code is under version control and available from:
+https://github.com/bloomonkey/ead-toolbox
 
 
 Documentation
@@ -65,9 +67,8 @@ README file!
 Requirements / Dependencies
 ---------------------------
 
-- Python 2.6+
-- lxml
-- wsgiref >= 0.1.2 
+- Python_ >= 2.6
+- lxml_
 
 
 Installation
@@ -76,7 +77,9 @@ Installation
 Users
 ~~~~~
 
-``pip install git+http://github.com/bloomonkey/ead-toolbox.git#egg=eadtoolbox``
+::
+
+    pip install eadtoolbox
 
 
 Developers
@@ -87,17 +90,17 @@ from system Python_ and any packages that may be installed there.
 
 1. In GitHub_, fork the repository
 
-2. Clone your fork:
+2. Clone your fork::
 
-    ``git clone git@github.com:<username>/ead-toolbox.git``
+       git clone git@github.com:<username>/ead-toolbox.git
 
-3. Install dependencies:
+3. Install dependencies::
 
-    ``pip install -r requirements.txt``
+       pip install -r requirements.txt
 
-4. Install in develop / editable mode:
+4. Install in develop / editable mode::
 
-    ``pip install -e .``
+       pip install -e .
 
 
 Examples
@@ -176,6 +179,7 @@ See LICENSE.rst for licensing details.
 .. Links
 .. _Python: http://www.python.org/
 .. _WSGI: http://wsgi.org
+.. _lxml: https://pypi.python.org/pypi/lxml
 .. _`Encoded Archival Description`: http://www.loc.gov/ead/
 .. _`University of Liverpool`: http://www.liv.ac.uk
 .. _GitHub: http://github.com
