@@ -15,7 +15,7 @@ py_version = getattr(sys, 'version_info', (0, 0, 0))
 
 # Basic information
 _name = "eadtoolbox"
-_version = "1.0.0"
+_version = "1.1.0"
 _description = "Tools for working with EAD XML files."
 _author = 'John Harrison'
 _author_email = 'john.harrison@liv.ac.uk'
