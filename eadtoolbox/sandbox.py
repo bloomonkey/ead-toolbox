@@ -180,10 +180,7 @@ class EADSandboxWsgiApp(object):
 
 def start(argv=None):
     global argparser, application
-    if argv is None:
-        args = argparser.parse_args()
-    else:
-        args = argparser.parse_args(argv)
+    args = argparser.parse_args() if argv is None else argparser.parse_args(argv)
     
     httpd = make_server(args.hostname, args.port, application)
     url = "http://{0}:{1}".format(args.hostname, args.port)
